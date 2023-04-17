@@ -7,28 +7,36 @@ canvas.height = 576
 
 c.fillRect(0,0, canvas.width, canvas.height)
 
+const gravity = 0.2
 
 class Sprite {
     constructor({position, velocity}){
         this.position = position
         this.velocity = velocity
+        this.height = 150
     }
 
     draw() {
         c.fillStyle = "red"
-        c.fillRect(this.position.x, this.position.y, 50 ,150)
+        c.fillRect(this.position.x, this.position.y, 50 , this.height)
     }
 
     update() {
         this.draw()
-        this.position.y += 5
+        this.position.y += this.velocity.y
+
+        if (this.position.y + this.height + this.velocity.y >= canvas.height) {
+            this.velocity.y = 0
+            
+        } else this.velocity.y += gravity
     }
 }
 
 const player1 = new Sprite({
+
     position: {
         x: 0,
-        y:100,
+        y: 100,
     },
     velocity: {
         x: 0,
@@ -49,8 +57,24 @@ const player2 = new Sprite({
 
 
 
-function animte() {
-    window.requestAnimationFrame(animte)
+function animate() {
+    window.requestAnimationFrame(animate)
+    
+    c.fillStyle = "black"
+    c.fillRect(0,0, canvas.width, canvas.height)
     player1.update()
     player2.update()
+    console.log(player1)
+    
 }
+
+animate()
+
+window.addEventListener('keydown',(event) =>{
+    switch (event.key){
+    case 'd':
+        player1.velocity.x += 1
+        break
+    }
+    console.log(event.key)
+})
