@@ -13,7 +13,7 @@ class Sprite {
     constructor({position, velocity}){
         this.position = position
         this.velocity = velocity
-        this.height = 150
+        this.height = 250
     }
 
     draw() {
@@ -23,7 +23,9 @@ class Sprite {
 
     update() {
         this.draw()
+
         this.position.y += this.velocity.y
+        this.position.x += this.velocity.x
 
         if (this.position.y + this.height + this.velocity.y >= canvas.height) {
             this.velocity.y = 0
@@ -32,7 +34,7 @@ class Sprite {
     }
 }
 
-const player1 = new Sprite({
+let player1 = new Sprite({
 
     position: {
         x: 0,
@@ -44,7 +46,7 @@ const player1 = new Sprite({
     }
 })
 
-const player2 = new Sprite({
+let player2 = new Sprite({
     position: {
         x: 400,
         y: 100,
@@ -55,6 +57,21 @@ const player2 = new Sprite({
     }
 })
 
+const keys = {
+    a: {
+      pressed: false
+    },
+    d: {
+      pressed: false
+    },
+    ArrowRight: {
+      pressed: false
+    },
+    ArrowLeft: {
+      pressed: false
+    }
+  }
+
 
 
 function animate() {
@@ -64,17 +81,64 @@ function animate() {
     c.fillRect(0,0, canvas.width, canvas.height)
     player1.update()
     player2.update()
-    console.log(player1)
     
+    player1.velocity.x = 0
+    player2.velocity.x = 0
+    
+    if (keys.d.pressed) {
+        player1.velocity.x += 1
+        }
+        else if (keys.a.pressed) {
+        player1.velocity.x -= 1
+        }
+    if (keys.ArrowLeft.pressed) {
+        player2.velocity.x -=1
+    } else if (keys.ArrowRight.pressed) {
+        player2.velocity.x += 1
+    }
 }
 
 animate()
 
 window.addEventListener('keydown',(event) =>{
     switch (event.key){
-    case 'd':
-        player1.velocity.x += 1
-        break
-    }
+        case 'd':
+            keys.d.pressed = true
+            break
+        case 'a':
+            keys.a.pressed = true
+            break
+        }
+    
+    switch (event.key) {
+        case 'ArrowRight' :
+            keys.ArrowRight.pressed = true
+            break
+        case 'ArrowLeft':
+            keys.ArrowLeft.pressed = true
+            break
+        }
+
     console.log(event.key)
+
+})
+
+window.addEventListener('keyup',(event) =>{
+    switch (event.key) {
+        case 'd':
+          keys.d.pressed = false
+          break
+        case 'a':
+          keys.a.pressed = false
+          break
+      }
+    
+    switch (event.key) {
+        case 'ArrowRight':
+            keys.ArrowRight.pressed = false
+            break
+        case 'ArrowLeft':
+            keys.ArrowLeft.pressed = false
+            break
+      }
 })
