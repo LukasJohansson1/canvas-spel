@@ -2,9 +2,10 @@
 const canvas = document.getElementById("myCanvas");
 const c = canvas.getContext("2d");
 
-canvas.width = 1024
-canvas.height = 576
+canvas.width = 1536
+canvas.height = 650
 
+c.fillStyle = "green"
 c.fillRect(0,0, canvas.width, canvas.height)
 
 const gravity = 0.2
@@ -14,11 +15,12 @@ class Sprite {
         this.position = position
         this.velocity = velocity
         this.height = 250
-        this.lastkey
+        this.lastkey = null
+        this.jumpsRemaining = 2
     }
 
     draw() {
-        c.fillStyle = "red"
+        c.fillStyle = "blue"
         c.fillRect(this.position.x, this.position.y, 50 , this.height)
     }
 
@@ -30,26 +32,45 @@ class Sprite {
 
         if (this.position.y + this.height + this.velocity.y >= canvas.height) {
             this.velocity.y = 0
+            this.jumpsRemaining = 2
             
-        } else this.velocity.y += gravity
+        } else this.velocity.y += gravity   
+
+        if (this.position.x < 0) {
+            this.position.x = 0;
+          } else if (this.position.x + 50 > canvas.width) {
+            this.position.x = canvas.width - 50;
+          }
     }
+
+    jump() {
+        if (this.jumpsRemaining > 0) {
+          this.velocity.y = -7;
+          this.jumpsRemaining -= 1;
+        }
+      }
 }
+
 
 let player1 = new Sprite({
 
     position: {
-        x: 0,
+        x: 100,
         y: 100,
     },
     velocity: {
         x: 0,
         y: 0,
+    },
+
+    jump: {
+        amount: 2
     }
 })
 
 let player2 = new Sprite({
     position: {
-        x: 400,
+        x: 1400,
         y: 100,
     },
     velocity: {
@@ -117,11 +138,12 @@ window.addEventListener('keydown',(event) =>{
             player1.lastkey = "a"
             break
         case 'w':
-            player1.velocity.y = -7
+            case 'w':
+            player1.jump()
             break
-        }
         
-
+            
+        }
 
     switch (event.key) {
         case 'ArrowRight' :
@@ -133,8 +155,7 @@ window.addEventListener('keydown',(event) =>{
             player2.lastkey = "ArrowLeft"
             break
         case 'ArrowUp':
-            player2.velocity.y = -7
-            player2.lastkey = "ArrowUp"
+            player2.jump()
             break
         }
 
