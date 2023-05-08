@@ -1,31 +1,51 @@
-// Setup
 const canvas = document.getElementById("myCanvas");
 const c = canvas.getContext("2d");
 
 canvas.width = 1536
 canvas.height = 650
 
-c.fillStyle = "green"
+
 c.fillRect(0,0, canvas.width, canvas.height)
 
 const gravity = 0.2
 
 class Sprite {
-    constructor({position, velocity}){
+    constructor({position, velocity, color ="red", offset}){
         this.position = position
         this.velocity = velocity
         this.height = 250
-        this.lastkey = null
+        this.width = 60
         this.jumpsRemaining = 2
+        this.attackBox = {
+            position: {
+                x: this.position.x,
+                y: this.position.y,
+            },
+            offset,
+            width: 100,
+            height: 50,
+        }
+        this.color = color
+        this.isAttacking
     }
 
     draw() {
-        c.fillStyle = "blue"
-        c.fillRect(this.position.x, this.position.y, 50 , this.height)
+        c.fillStyle = this.color
+        c.fillRect(this.position.x, this.position.y, this.width , this.height)
+
+        if (this.isAttacking) {
+            c.fillStyle = "red"
+            c.fillRect(this.attackBox.position.x, 
+            this.attackBox.position.y, 
+            this.attackBox.width, 
+            this.attackBox.height)
+            }
     }
 
     update() {
         this.draw()
+        this.attackBox.position.x = this.position.x + this.attackBox.offset.x
+        this.attackBox.position.y = this.position.y - this.attackBox.offset.y
 
         this.position.y += this.velocity.y
         this.position.x += this.velocity.x
@@ -43,6 +63,13 @@ class Sprite {
           }
     }
 
+    attack() {
+        this.isAttacking = true
+        setTimeout(() => {
+            this.isAttacking = false
+        }, 100);
+    }
+
     jump() {
         if (this.jumpsRemaining > 0) {
           this.velocity.y = -7;
@@ -56,27 +83,33 @@ let player1 = new Sprite({
 
     position: {
         x: 100,
-        y: 100,
+        y: 300,
     },
     velocity: {
         x: 0,
         y: 0,
     },
-
-    jump: {
-        amount: 2
-    }
+    offset: {
+        x: 0,
+        y: 0,
+    },
+    color: "blue"
 })
 
 let player2 = new Sprite({
     position: {
         x: 1400,
-        y: 100,
+        y: 300,
     },
     velocity: {
         x: 0,
-        y: 0,
-    }
+        y: -20,
+    },
+    offset: {
+        x: -40,
+        y: -20,
+    },
+    color: "purple"
 })
 
 const keys = {
@@ -115,14 +148,22 @@ function animate() {
         else if (keys.a.pressed ) {
         player1.velocity.x -= 3
         }
+
     if (keys.ArrowLeft.pressed) {
         player2.velocity.x -=3
     } else if (keys.ArrowRight.pressed) {
         player2.velocity.x += 3
     }
 
-
-    
+    if (player1.attackBox.position.x + player1.attackBox.width >= player2.position.x 
+        && player1.attackBox.position.x <= player2.position.x + player2.width 
+        && player1.attackBox.position.y + player1.attackBox.height >= player2.position.y 
+        && player1.attackBox.position.y <= player2.height 
+        && player1.isAttacking  ) {
+            player1.isAttacking = false
+            console.log("aaa")
+    }
+        
 }
 
 animate()
@@ -138,10 +179,11 @@ window.addEventListener('keydown',(event) =>{
             player1.lastkey = "a"
             break
         case 'w':
-            case 'w':
             player1.jump()
             break
-        
+        case 's':
+            player1.attack()
+            break
             
         }
 
@@ -156,6 +198,9 @@ window.addEventListener('keydown',(event) =>{
             break
         case 'ArrowUp':
             player2.jump()
+            break
+        case 'ArrowDown':
+            player2.attack()
             break
         }
 
