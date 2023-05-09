@@ -91,7 +91,7 @@ let player1 = new Sprite({
     },
     offset: {
         x: 0,
-        y: 0,
+        y: -40,
     },
     color: "blue"
 })
@@ -103,11 +103,11 @@ let player2 = new Sprite({
     },
     velocity: {
         x: 0,
-        y: -20,
+        y: 0,
     },
     offset: {
         x: -40,
-        y: -20,
+        y: -40,
     },
     color: "purple"
 })
