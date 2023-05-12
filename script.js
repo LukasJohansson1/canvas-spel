@@ -27,7 +27,7 @@ class Sprite {
     this.color = color;
     this.isAttacking;
     this.isAttackCooldown = false;
-    this.cooldownDuration = 500;
+    this.cooldownDuration = 250;
   }
 
   draw() {
