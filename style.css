@@ -6,3 +6,9 @@
 canvas {
   background-image: url(background.jpg);
 }
+
+#bg {
+  width: 100vw;
+  height: 650px;
+  display: none;
+}

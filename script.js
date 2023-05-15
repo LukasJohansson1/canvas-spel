@@ -1,8 +1,12 @@
+window.focus;
 const canvas = document.getElementById("myCanvas");
 const c = canvas.getContext("2d");
 
 canvas.width = 1536;
 canvas.height = 650;
+
+let img = new image()
+img.src = "background.jpg"
 
 c.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -28,6 +32,7 @@ class Sprite {
     this.isAttacking;
     this.isAttackCooldown = false;
     this.cooldownDuration = 250;
+    this.lastkey = "";
   }
 
   draw() {
@@ -48,8 +53,12 @@ class Sprite {
   checkPlayerLost() {
     if (player1Health <= 0) {
       alert("Player 2 wins!");
+      setTimeout(() => {
+      }, 2000);
     } else if (player2Health <= 0) {
-      alert("Player 1 wins!");
+      setTimeout(() => {
+        alert("Player 1 wins!");
+      }, 1000);
     }
   }
 
@@ -78,15 +87,27 @@ class Sprite {
     if (!this.isAttackCooldown) {
       this.isAttacking = true;
       this.isAttackCooldown = true;
-
+  
       setTimeout(() => {
         this.isAttacking = false;
         setTimeout(() => {
           this.isAttackCooldown = false;
         }, this.cooldownDuration);
       }, 100);
+  
+      if (this.lastkey === "a" ) {
+        player1.attackBox.offset.x = -40; 
+      } else if (this.lastkey === "d") {
+        player1.attackBox.offset.x = 0;
+      } else if(this.lastkey === "ArrowRight") {
+        player2.attackBox.offset.x = 0
+      } else if(this.lastkey === "ArrowLeft") {
+        player2.attackBox.offset.x = -40;
+      }
     }
   }
+
+
 
 
 
@@ -176,7 +197,7 @@ function checkCollision(player1, player2) {
 function animate() {
   window.requestAnimationFrame(animate);
 
-  c.fillStyle = "black";
+  c.fillStyle = "pink";
   c.fillRect(0, 0, canvas.width, canvas.height);
   player1.update();
   player2.update();
@@ -185,9 +206,9 @@ function animate() {
   player2.velocity.x = 0;
 
   if (keys.d.pressed) {
-    player1.velocity.x += 2;
+    player1.velocity.x += 5;
   } else if (keys.a.pressed) {
-    player1.velocity.x -= 2;
+    player1.velocity.x -= 5;
   }
 
   if (keys.ArrowLeft.pressed) {
@@ -205,7 +226,6 @@ function animate() {
     player1Health -= 10;
   }
 
-  
   player1Health = Math.max(player1Health, 0);
   player2Health = Math.max(player2Health, 0);
 
@@ -304,8 +324,6 @@ window.addEventListener("keydown", (event) => {
         keys.ArrowLeft.pressed = false;
         break;
       case "ArrowUp":
-        break;
-      case "ArrowDown":
         break;
     }
   });
