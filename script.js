@@ -5,7 +5,9 @@ const c = canvas.getContext("2d");
 canvas.width = 1536;
 canvas.height = 650;
 
-c.fillRect(0, 0, canvas.width, canvas.height);
+let img = new Image();
+img.src = "background.jpg";
+
 
 const gravity = 0.2;
 
@@ -51,11 +53,11 @@ class Sprite {
     if (player1Health <= 0) {
       alert("Player 2 wins!");
       setTimeout(() => {
-      }, 2000);
+      }, 3000);
     } else if (player2Health <= 0) {
       setTimeout(() => {
         alert("Player 1 wins!");
-      }, 1000);
+      }, 3000);
     }
   }
 
@@ -194,8 +196,12 @@ function checkCollision(player1, player2) {
 function animate() {
   window.requestAnimationFrame(animate);
 
-  c.fillStyle = "pink";
-  c.fillRect(0, 0, canvas.width, canvas.height);
+  c.clearRect(0, 0, canvas.width, canvas.height);
+
+
+  img.onload = function () {
+  c.drawImage(img, 0, 0, canvas.width, canvas.height);
+};
   player1.update();
   player2.update();
 
