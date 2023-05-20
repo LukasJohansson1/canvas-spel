@@ -1,12 +1,9 @@
-window.focus;
+
 const canvas = document.getElementById("myCanvas");
 const c = canvas.getContext("2d");
 
 canvas.width = 1536;
 canvas.height = 650;
-
-let img = new image()
-img.src = "background.jpg"
 
 c.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -22,7 +19,7 @@ class Sprite {
     this.attackBox = {
       position: {
         x: this.position.x,
-        y: this.position.y,
+        y: this.position.y, 
       },
       offset,
       width: 100,
@@ -244,7 +241,7 @@ let player1 = new Sprite({
   },
   offset: {
     x: 0,
-    y: -65,
+    y: -70,
   },
   color: "blue",
 });
@@ -260,7 +257,7 @@ let player2 = new Sprite({
   },
   offset: {
     x: -40,
-    y: -65,
+    y: -70,
   },
   color: "purple",
 });
