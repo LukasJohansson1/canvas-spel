@@ -8,6 +8,9 @@ canvas.height = 650;
 let img = new Image();
 img.src = "background.jpg";
 
+let player1Died = false;
+let player2Died = false;
+
 
 const gravity = 0.2;
 
@@ -50,16 +53,15 @@ class Sprite {
   }
   
   checkPlayerLost() {
-    if (player1Health <= 0) {
+    if (player1Health <= 0 && !player1Died) {
+      player1Died = true;
       alert("Player 2 wins!");
-      setTimeout(() => {
-      }, 3000);
-    } else if (player2Health <= 0) {
-      setTimeout(() => {
-        alert("Player 1 wins!");
-      }, 3000);
+    } else if (player2Health <= 0 && !player2Died) {
+      player2Died = true;
+      alert("Player 1 wins!");
     }
   }
+
 
 
   update() {
@@ -92,7 +94,7 @@ class Sprite {
         setTimeout(() => {
           this.isAttackCooldown = false;
         }, this.cooldownDuration);
-      }, 100);
+      }, 200);
   
       if (this.lastkey === "a" ) {
         player1.attackBox.offset.x = -40; 
@@ -223,11 +225,14 @@ function animate() {
   if (checkCollision(player1, player2)) {
     player1.isAttacking = false;
     player2Health -= 10;
+    player2.checkPlayerLost();
   }
   if (checkCollision(player2, player1)) {
     player2.isAttacking = false;
     player1Health -= 10;
+    player1.checkPlayerLost();
   }
+
 
   player1Health = Math.max(player1Health, 0);
   player2Health = Math.max(player2Health, 0);
